@@ -23,9 +23,9 @@ namespace Lab1{
                     string line;
                     while ((line = sr.ReadLine()) != null)
                     {
-                        foreach (var word in line.Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries))
+                        if (!string.IsNullOrWhiteSpace(line))
                         {
-                            words.Add(word);
+                            words.Add(line);
                         }
                     }
                 }
