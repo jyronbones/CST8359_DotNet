@@ -1,0 +1,48 @@
+﻿@model Lab3.Models.Student
+
+@{
+    Layout = "_Layout";
+}
+
+<h2>Create Student</h2>
+
+@using (Html.BeginForm("DisplayStudent", "Home", FormMethod.Post))
+{
+    <div>
+        @Html.LabelFor(m => m.FirstName)
+        @Html.TextBoxFor(m => m.FirstName)
+        @Html.ValidationMessageFor(m => m.FirstName)
+    </div>
+
+    <div>
+        @Html.LabelFor(m => m.LastName)
+        @Html.TextBoxFor(m => m.LastName)
+        @Html.ValidationMessageFor(m => m.LastName)
+    </div>
+
+    <div>
+        @Html.LabelFor(m => m.StudentId)
+        @Html.TextBoxFor(m => m.StudentId)
+        @Html.ValidationMessageFor(m => m.StudentId)
+    </div>
+
+    <div>
+        @Html.LabelFor(m => m.EmailAddress)
+        @Html.TextBoxFor(m => m.EmailAddress)
+        @Html.ValidationMessageFor(m => m.EmailAddress)
+    </div>
+
+    <div>
+        @Html.LabelFor(m => m.Password)
+        @Html.PasswordFor(m => m.Password)
+        @Html.ValidationMessageFor(m => m.Password)
+    </div>
+
+    <div>
+        @Html.LabelFor(m => m.Description)
+        @Html.TextAreaFor(m => m.Description)
+        @Html.ValidationMessageFor(m => m.Description)
+    </div>
+
+    <button type="submit">Create</button>
+}

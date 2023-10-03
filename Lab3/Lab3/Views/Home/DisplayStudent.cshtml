@@ -1,0 +1,16 @@
+﻿@model Lab3.Models.Student
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Create Student";
+}
+
+<h2>Student Details</h2>
+
+<p>
+    First Name: @Model.FirstName<br />
+    Last Name: @Model.LastName<br />
+    Student ID: @Model.StudentId<br />
+    Email Address: @Model.EmailAddress<br />
+    Description: @Model.Description
+</p>

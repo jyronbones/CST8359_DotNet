@@ -1,0 +1,27 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+</head>
+<body>
+    <header style="background-color: #f8f9fa; padding: 10px; text-align: center;">
+        <link href="~/StyleSheet.css" rel="stylesheet" />
+        <h1>Byron Jones - 040585687</h1>
+        <p>Lab 3 - CST8359</p>
+        @Html.ActionLink("Show the song!", "SongForm", "Home")
+        @Html.ActionLink("Students", "CreateStudent", "Home")
+    </header>
+
+    <div>
+        @RenderBody()
+    </div>
+
+    <footer style="background-color: #f8f9fa; padding: 10px; text-align: center;">
+        <p><strong>Layout & Directories:</strong></p>
+        <p>A layout file like '_Layout.cshtml' acts as a template for views. It helps maintain a consistent look and feel across multiple pages in an application, as it allows one to define common structures like headers and footers in one place.</p>
+        <p>The '_Layout.cshtml' file is typically placed in the 'Views/Shared' directory as it is a shared layout file used by other views in the project, providing a consistent structure for the web application.</p>
+        <p>CSS files are generally placed in the 'wwwroot/css' directory. The 'wwwroot' directory is a designated folder for static files such as stylesheets, scripts, and images, and it is recognized and used by the web server to serve static files when the application is running.</p>
+    </footer>
+</body>
+</html>

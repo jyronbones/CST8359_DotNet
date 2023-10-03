@@ -1,0 +1,46 @@
+﻿﻿@{
+    Layout = "_Layout";
+    int numberOfMonkeys = (int)ViewData["NumberOfMonkeys"];
+}
+
+<h2>Sing</h2>
+
+<h3>Five Little Monkeys</h3>
+
+<div>
+    @for (int i = numberOfMonkeys; i > 0; i--)
+    {
+        <p>
+            <span>@i</span> @GetMonkeyText(i) jumping on the bed,<br>
+            @GetFallingLine(i)<br>
+            Mama called the doctor and the doctor said,<br>
+            "@GetDoctorAdvice(i)"
+        </p>
+    }
+</div>
+
+@using (Html.BeginForm("SongForm", "Home"))
+{
+    <button type="submit">Play Again</button>
+}
+
+@functions {
+    string GetMonkeyText(int count)
+    {
+        return count == 1 ? "little monkey" : "little monkeys";
+    }
+
+    string GetFallingLine(int count)
+    {
+        if (count == 1)
+        {
+            return "He fell off and bumped his head";
+        }
+        return count % 2 == 0 ? "Ohe fell off and bumped her head" : "One fell off and bumped his head";
+    }
+
+    string GetDoctorAdvice(int count)
+    {
+        return count == 1 ? "Put those monkeys to bed!" : "No more monkeys jumping on the bed!";
+    }
+}

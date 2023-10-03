@@ -1,0 +1,22 @@
+﻿@{
+    Layout = "_Layout";
+}
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>SongForm</title>
+</head>
+<body>
+    <div>
+        @using (Html.BeginForm("Sing", "Home", FormMethod.Post))
+        {
+            <label for="numberOfMonkeys">Enter number of monkeys:</label>
+            <input type="number" name="numberOfMonkeys" id="numberOfMonkeys" min="50" max="100" required />
+            <input type="submit" value="Sing" />
+        }
+    </div>
+</body>
+</html>
