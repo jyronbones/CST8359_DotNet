@@ -36,7 +36,7 @@
         {
             return "He fell off and bumped his head";
         }
-        return count % 2 == 0 ? "Ohe fell off and bumped her head" : "One fell off and bumped his head";
+        return "One fell off and bumped " + (count % 2 == 0 ? "her" : "his") + " head";
     }
 
     string GetDoctorAdvice(int count)
