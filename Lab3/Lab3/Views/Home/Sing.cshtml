@@ -8,10 +8,10 @@
 <h3>Five Little Monkeys</h3>
 
 <div>
-    @for (int i = numberOfMonkeys; i > 0; i--)
+    @for (int i = numberOfMonkeys; i >= 0; i--)
     {
         <p>
-            <span>@i</span> @GetMonkeyText(i) jumping on the bed,<br>
+            @GetNumMonkeys(i) @GetMonkeyText(i) jumping on the bed,<br>
             @GetFallingLine(i)<br>
             Mama called the doctor and the doctor said,<br>
             "@GetDoctorAdvice(i)"
@@ -25,9 +25,11 @@
 }
 
 @functions {
+    string GetNumMonkeys(int count) => count == 0 ? "" : count.ToString();
+
     string GetMonkeyText(int count)
     {
-        return count == 1 ? "little monkey" : "little monkeys";
+        return count == 0 ? "No little monkeys" : count == 1 ? "little monkey" : "little monkeys";
     }
 
     string GetFallingLine(int count)
@@ -36,11 +38,11 @@
         {
             return "He fell off and bumped his head";
         }
-        return "One fell off and bumped " + (count % 2 == 0 ? "her" : "his") + " head";
+        return (count == 0 ? "None" : "One") + " fell off and bumped " + (count % 2 == 0 ? "her" : "his") + " head";
     }
 
     string GetDoctorAdvice(int count)
     {
-        return count == 1 ? "Put those monkeys to bed!" : "No more monkeys jumping on the bed!";
+        return count == 0 ? "Put those monkeys to bed!" : "No more monkeys jumping on the bed!";
     }
 }
