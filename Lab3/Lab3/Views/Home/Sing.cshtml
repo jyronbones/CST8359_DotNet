@@ -27,10 +27,7 @@
 @functions {
     string GetNumMonkeys(int count) => count == 0 ? "" : count.ToString();
 
-    string GetMonkeyText(int count)
-    {
-        return count == 0 ? "No little monkeys" : count == 1 ? "little monkey" : "little monkeys";
-    }
+    string GetMonkeyText(int count) => count == 0 ? "No little monkeys" : count == 1 ? "little monkey" : "little monkeys";
 
     string GetFallingLine(int count)
     {
@@ -41,8 +38,6 @@
         return (count == 0 ? "None" : "One") + " fell off and bumped " + (count % 2 == 0 ? "her" : "his") + " head";
     }
 
-    string GetDoctorAdvice(int count)
-    {
-        return count == 0 ? "Put those monkeys to bed!" : "No more monkeys jumping on the bed!";
-    }
+    string GetDoctorAdvice(int count) => count == 0 ? "Put those monkeys to bed!" : "No more monkeys jumping on the bed!";
+    
 }
