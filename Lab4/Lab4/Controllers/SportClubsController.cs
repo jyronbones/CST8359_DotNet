@@ -170,6 +170,27 @@ namespace Lab4.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // GET: SportClubs/News/5
+        public async Task<IActionResult> News(string id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            // Assuming there's a relationship between SportClubs and News in your model
+            var sportClubNews = await _context.News
+                .Where(n => n.SportClubId == id) // Replace 'SportClubId' with the actual foreign key property
+                .ToListAsync();
+
+            if (sportClubNews == null)
+            {
+                return NotFound();
+            }
+
+            return View(sportClubNews);
+        }
+
         private bool SportClubExists(string id)
         {
           return _context.SportClubs.Any(e => e.Id == id);
