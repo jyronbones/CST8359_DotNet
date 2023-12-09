@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Delete";
+    var subscriptionId = ViewData["subscriptionId"] as string;
 }
 
 <h1>Delete</h1>
@@ -11,29 +12,36 @@
     <h4>News</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.FileName)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.FileName)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Url)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Url)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.SportClub)
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.SportClub.Title)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.SportClub.Id)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.SportClub.Title)
         </dd>
     </dl>
-    
-    <form asp-action="Delete">
+
+    <form asp-action="DeleteConfirmed" method="post">
         <input type="hidden" asp-for="NewsId" />
+        <input type="hidden" name="subscriptionId" value="@subscriptionId" />
         <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
+        <a asp-action="Index" asp-route-id="@subscriptionId">Back to List</a>
     </form>
 </div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
