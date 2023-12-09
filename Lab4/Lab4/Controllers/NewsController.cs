@@ -20,13 +20,13 @@ public class NewsController : Controller
     {
         _context = context;
         _blobServiceClient = blobServiceClient;
-        //_containerName = configuration["AzureBlobStorageSettings:ContainerName"];
+        _containerName = configuration["AzureBlobStorageSettings:ContainerName"];
     }
 
     // GET: News/Create/{subscriptionId}
     public IActionResult Create(string subscriptionId)
     {
-        string _containerName = GetContainerNameFromSubscriptionId(subscriptionId);
+      
         ViewData["SportClubId"] = new SelectList(_context.SportClubs, "Id", "Title");
         return View();
     }
@@ -36,7 +36,7 @@ public class NewsController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(string subscriptionId, [Bind("NewsId,FileName,Url,SportClubId")] News news, IFormFile Photo)
     {
-        string _containerName = GetContainerNameFromSubscriptionId(subscriptionId);
+      
         if (ModelState.IsValid)
         {
             try
@@ -62,7 +62,6 @@ public class NewsController : Controller
 
                 _context.News.Add(news);
                 await _context.SaveChangesAsync();
-                //return RedirectToAction(nameof(Index));
                 return Redirect($"/SportClubs/News/{news.SportClubId}");
             }
             catch (Exception ex)
@@ -84,51 +83,53 @@ public class NewsController : Controller
         return View(newsList);
     }
 
-    // POST: News/Delete/5
+    // GET: News/Delete/{news id}
+    public async Task<IActionResult> Delete(int? id)
+    {
+        if (id == null)
+        {
+            return NotFound();
+        }
+
+        var news = await _context.News
+            .Include(n => n.SportClub)
+            .FirstOrDefaultAsync(n => n.NewsId == id);
+        
+        if (news == null)
+        {
+            return NotFound();
+        }
+       
+        return View(news);
+    }
+
+
     [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
         var news = await _context.News.FindAsync(id);
-        if (news != null)
-        {
-            if (!string.IsNullOrEmpty(news.Url))
-            {
-                BlobContainerClient containerClient = _blobServiceClient.GetBlobContainerClient(_containerName);
-                BlobClient blobClient = containerClient.GetBlobClient(Path.GetFileName(news.Url));
-                await blobClient.DeleteIfExistsAsync();
-            }
 
-            _context.News.Remove(news);
-            await _context.SaveChangesAsync();
+        if (news == null)
+        {
+            return NotFound();
         }
 
-        return RedirectToAction(nameof(Index));
+        // Delete associated blob instance
+        if (!string.IsNullOrEmpty(news.Url))
+        {
+            BlobContainerClient containerClient = _blobServiceClient.GetBlobContainerClient(_containerName);
+            BlobClient blobClient = containerClient.GetBlobClient(Path.GetFileName(news.Url));
+            await blobClient.DeleteIfExistsAsync();
+        }
+
+        var sportClubId = news.SportClubId;
+
+        // Delete the news from the database
+        _context.News.Remove(news);
+        await _context.SaveChangesAsync();
+        return Redirect($"/SportClubs/News/{news.SportClubId}"); 
     }
 
-    private string GetContainerNameFromSubscriptionId(string subscriptionId)
-    {
-        var currentUrl = HttpContext.Request.GetDisplayUrl();
-        var lastTwoChars = currentUrl.Substring(Math.Max(0, currentUrl.Length - 2));
-
-        string containerName = "";
-
-        
-            if (lastTwoChars.Equals("A1", StringComparison.OrdinalIgnoreCase))
-            {
-                containerName = "alpha";
-            }
-            else if (lastTwoChars.Equals("B1", StringComparison.OrdinalIgnoreCase))
-            {
-                containerName = "beta";
-            }
-            else if (lastTwoChars.Equals("O1", StringComparison.OrdinalIgnoreCase))
-            {
-                containerName = "omega";
-            }
-        
-
-        return containerName;
-    }
 
 }
