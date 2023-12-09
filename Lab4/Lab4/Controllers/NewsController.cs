@@ -22,22 +22,24 @@ public class NewsController : Controller
         _containerName = configuration["AzureBlobStorageSettings:ContainerName"];
     }
 
-    // GET: News/Create
-    public IActionResult Create()
+    // GET: News/Create/{subscriptionId}
+    public IActionResult Create(string subscriptionId)
     {
-        ViewData["SportClubId"] = new SelectList(_context.SportClubs, "Id", "Title"); // Changed "Name" to "Title"
+        ViewData["SportClubId"] = new SelectList(_context.SportClubs, "Id", "Title");
         return View();
     }
 
-    // POST: News/Create
+    // POST: News/Create/{subscriptionId}
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("NewsId,FileName,Url,SportClubId")] News news, IFormFile Photo)
+    public async Task<IActionResult> Create(string subscriptionId, [Bind("NewsId,FileName,Url,SportClubId")] News news, IFormFile Photo)
     {
         if (ModelState.IsValid)
         {
             try
             {
+                news.SportClubId = subscriptionId;
+
                 if (Photo != null && Photo.Length > 0)
                 {
                     var uniqueFileName = $"{Guid.NewGuid()}_{Path.GetFileName(Photo.FileName)}";
@@ -63,9 +65,11 @@ public class NewsController : Controller
             }
         }
 
-        ViewData["SportClubId"] = new SelectList(_context.SportClubs, "Id", "Title", news.SportClubId); // Ensure SelectList is set for re-display
+        ViewData["SportClubId"] = new SelectList(_context.SportClubs, "Id", "Title", news.SportClubId);
         return View(news);
     }
+
+
 
     // GET: News
     public async Task<IActionResult> Index()

@@ -6,8 +6,14 @@
 
 <h1>News</h1>
 
+@{
+    string path = Context.Request.Path.Value;
+    string sportClubId = path.Length >= 2 ? path.Substring(path.Length - 2) : "";
+}
+
 <p>
-    <a asp-controller="News" asp-action="Create">Create New</a>
+    <a asp-action="Create" asp-route-id="@sportClubId">Create New item for @sportClubId</a>
+
 </p>
 <table class="table">
     <thead>
