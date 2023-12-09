@@ -27,7 +27,8 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
+      
+        @foreach (var item in Model.Where(n => n.SportClubId == sportClubId))
         {
             <tr>
                 <td>
@@ -38,8 +39,6 @@
                     @Html.DisplayFor(modelItem => item.SportClub.Title)
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.NewsId">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.NewsId">Details</a> |
                     <a asp-action="Delete" asp-route-id="@item.NewsId">Delete</a>
                 </td>
             </tr>

@@ -8,6 +8,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Lab4.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Http.Extensions;
 
 public class NewsController : Controller
 {
@@ -19,12 +20,13 @@ public class NewsController : Controller
     {
         _context = context;
         _blobServiceClient = blobServiceClient;
-        _containerName = configuration["AzureBlobStorageSettings:ContainerName"];
+        //_containerName = configuration["AzureBlobStorageSettings:ContainerName"];
     }
 
     // GET: News/Create/{subscriptionId}
     public IActionResult Create(string subscriptionId)
     {
+        string _containerName = GetContainerNameFromSubscriptionId(subscriptionId);
         ViewData["SportClubId"] = new SelectList(_context.SportClubs, "Id", "Title");
         return View();
     }
@@ -34,6 +36,7 @@ public class NewsController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(string subscriptionId, [Bind("NewsId,FileName,Url,SportClubId")] News news, IFormFile Photo)
     {
+        string _containerName = GetContainerNameFromSubscriptionId(subscriptionId);
         if (ModelState.IsValid)
         {
             try
@@ -53,11 +56,14 @@ public class NewsController : Controller
 
                     news.FileName = uniqueFileName;
                     news.Url = blobClient.Uri.ToString();
+                    var currentUrl = HttpContext.Request.GetDisplayUrl();
+                    news.SportClubId = currentUrl.Substring(Math.Max(0, currentUrl.Length - 2));
                 }
 
                 _context.News.Add(news);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                //return RedirectToAction(nameof(Index));
+                return Redirect($"/SportClubs/News/{news.SportClubId}");
             }
             catch (Exception ex)
             {
@@ -99,4 +105,30 @@ public class NewsController : Controller
 
         return RedirectToAction(nameof(Index));
     }
+
+    private string GetContainerNameFromSubscriptionId(string subscriptionId)
+    {
+        var currentUrl = HttpContext.Request.GetDisplayUrl();
+        var lastTwoChars = currentUrl.Substring(Math.Max(0, currentUrl.Length - 2));
+
+        string containerName = "";
+
+        
+            if (lastTwoChars.Equals("A1", StringComparison.OrdinalIgnoreCase))
+            {
+                containerName = "alpha";
+            }
+            else if (lastTwoChars.Equals("B1", StringComparison.OrdinalIgnoreCase))
+            {
+                containerName = "beta";
+            }
+            else if (lastTwoChars.Equals("O1", StringComparison.OrdinalIgnoreCase))
+            {
+                containerName = "omega";
+            }
+        
+
+        return containerName;
+    }
+
 }
