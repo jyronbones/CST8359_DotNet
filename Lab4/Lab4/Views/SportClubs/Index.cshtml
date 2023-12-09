@@ -40,8 +40,8 @@
 }
     </tbody>
 </table>
-@if(Model.selectedId.Any()){
-    var selectedSportClub = Model.SportClubs.FirstOrDefault(a => a.Id.Equals(Model.selectedId));
+@if(Model.currentId.Any()){
+    var selectedSportClub = Model.SportClubs.FirstOrDefault(a => a.Id.Equals(Model.currentId));
     <h2>Subscribers to @selectedSportClub.Title</h2>
     <table class="table">
         <thead>

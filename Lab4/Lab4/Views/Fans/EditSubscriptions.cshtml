@@ -1,0 +1,44 @@
+﻿@model Lab4.Models.ViewModels.FanSubscriptionViewModel
+<h1>Edit</h1>
+
+<h4>Fan</h4>
+<h2>Full Name: @Model.Fan.FirstName @Model.Fan.LastName</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Sport Club</th>
+            <th>Subscription Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var subscription in Model.Subscriptions)
+        {
+            <tr>
+                <td>@subscription.Title</td>
+                <td>@(subscription.IsMember ? "Subscribed" : "Not Subscribed")</td>
+                <td>
+                    @if (subscription.IsMember)
+                    {
+                        <form asp-action="RemoveSubscriptions" method="post">
+                            <input type="hidden" name="fanId" value="@Model.Fan.Id" />
+                            <input type="hidden" name="sportsClubId" value="@subscription.SportClubId" />
+                            <input type="submit" value="Unregister" class="btn btn-danger" />
+                        </form>
+                    }
+                    else
+                    {
+                        <form asp-action="AddSubscriptions" method="post">
+                            <input type="hidden" name="fanId" value="@Model.Fan.Id" />
+                            <input type="hidden" name="sportsClubId" value="@subscription.SportClubId" />
+                            <input type="submit" value="Register" class="btn btn-primary" />
+                        </form>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="Index">Back to Index</a>

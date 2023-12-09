@@ -25,7 +25,7 @@ namespace Lab4.Controllers
                     SportClubs = await _context.SportClubs.ToListAsync(),
                     Fans = await _context.Fans.ToListAsync(),
                     Subscriptions = await _context.Subscriptions.ToListAsync(),
-                    selectedId = id
+                    currentId = id
                 };
                 return View(_viewModel);
             }
@@ -35,7 +35,7 @@ namespace Lab4.Controllers
                 SportClubs = await _context.SportClubs.ToListAsync(),
                 Fans = await _context.Fans.ToListAsync(),
                 Subscriptions = await _context.Subscriptions.ToListAsync(),
-                selectedId = string.Empty
+                currentId = string.Empty
             };
             return View(viewModel);
             
