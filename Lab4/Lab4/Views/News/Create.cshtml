@@ -13,13 +13,13 @@
         <form asp-action="Create" enctype="multipart/form-data" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-
+            <!-- Photo upload field -->
             <div class="form-group">
-                <input type="file" name="upload" class="form-control-file" />
+                <input type="file" name="photo" class="form-control-file" />
             </div>
 
             <div class="form-group">
-                <input type="submit" value="Upload Now" class="btn btn-primary" />
+                <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
     </div>

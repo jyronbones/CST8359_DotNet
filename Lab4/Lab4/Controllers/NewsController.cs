@@ -19,46 +19,64 @@ public class NewsController : Controller
     {
         _context = context;
         _blobServiceClient = blobServiceClient;
-        _containerName = configuration.GetConnectionString("AzureBlobStorage:ContainerName");
+        _containerName = configuration["AzureBlobStorageSettings:ContainerName"];
     }
 
+    // GET: News/Create
     public IActionResult Create()
     {
-        ViewData["SportClubId"] = new SelectList(_context.SportClubs, "Id", "Name");
+        ViewData["SportClubId"] = new SelectList(_context.SportClubs, "Id", "Title"); // Changed "Name" to "Title"
         return View();
     }
 
+    // POST: News/Create
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("NewsId,FileName,Url,SportClubId")] News news, IFormFile file)
+    public async Task<IActionResult> Create([Bind("NewsId,FileName,Url,SportClubId")] News news, IFormFile Photo)
     {
         if (ModelState.IsValid)
         {
-            if (file != null && file.Length > 0)
+            try
             {
-                var uniqueFileName = $"{Guid.NewGuid()}_{Path.GetFileName(file.FileName)}";
-                BlobContainerClient containerClient = _blobServiceClient.GetBlobContainerClient(_containerName);
-                BlobClient blobClient = containerClient.GetBlobClient(uniqueFileName);
-
-                using (var stream = file.OpenReadStream())
+                if (Photo != null && Photo.Length > 0)
                 {
-                    await blobClient.UploadAsync(stream, true);
+                    var uniqueFileName = $"{Guid.NewGuid()}_{Path.GetFileName(Photo.FileName)}";
+                    BlobContainerClient containerClient = _blobServiceClient.GetBlobContainerClient(_containerName);
+                    BlobClient blobClient = containerClient.GetBlobClient(uniqueFileName);
+
+                    using (var stream = Photo.OpenReadStream())
+                    {
+                        await blobClient.UploadAsync(stream, true);
+                    }
+
+                    news.FileName = uniqueFileName;
+                    news.Url = blobClient.Uri.ToString();
                 }
 
-                news.Url = blobClient.Uri.ToString();
+                _context.News.Add(news);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
             }
-
-            _context.Add(news);
-            await _context.SaveChangesAsync();
-            return Redirect($"/SportClubs/News/{news.NewsId}");
+            catch (Exception ex)
+            {
+                ViewData["ErrorMessage"] = $"An error occurred while uploading the file: {ex.Message}";
+            }
         }
 
-        ViewData["SportClubId"] = new SelectList(_context.SportClubs, "Id", "Name", news.SportClubId);
+        ViewData["SportClubId"] = new SelectList(_context.SportClubs, "Id", "Title", news.SportClubId); // Ensure SelectList is set for re-display
         return View(news);
     }
 
-    // Other actions...
+    // GET: News
+    public async Task<IActionResult> Index()
+    {
+        var newsList = await _context.News.Include(n => n.SportClub).ToListAsync();
+        return View(newsList);
+    }
 
+    // POST: News/Delete/5
+    [HttpPost, ActionName("Delete")]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
         var news = await _context.News.FindAsync(id);
@@ -68,7 +86,6 @@ public class NewsController : Controller
             {
                 BlobContainerClient containerClient = _blobServiceClient.GetBlobContainerClient(_containerName);
                 BlobClient blobClient = containerClient.GetBlobClient(Path.GetFileName(news.Url));
-
                 await blobClient.DeleteIfExistsAsync();
             }
 

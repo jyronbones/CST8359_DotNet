@@ -13,35 +13,31 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.FileName)
+                Image
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Url)
+                @Html.DisplayNameFor(model => model.FirstOrDefault().SportClub.Title)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.SportClub)
-            </th>
-            <th></th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.FileName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Url)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SportClub.Id)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.NewsId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.NewsId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.NewsId">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <!-- Displaying the image -->
+                    <img src="@item.Url" alt="@item.FileName" style="height: 100px; width: 100px;" />
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SportClub.Title)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.NewsId">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.NewsId">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.NewsId">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
