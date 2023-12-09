@@ -50,7 +50,7 @@ public class NewsController : Controller
 
             _context.Add(news);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return Redirect($"/SportClubs/News/{news.NewsId}");
         }
 
         ViewData["SportClubId"] = new SelectList(_context.SportClubs, "Id", "Name", news.SportClubId);
