@@ -115,7 +115,6 @@ public class NewsController : Controller
             return NotFound();
         }
 
-        // Delete associated blob instance
         if (!string.IsNullOrEmpty(news.Url))
         {
             BlobContainerClient containerClient = _blobServiceClient.GetBlobContainerClient(_containerName);
@@ -125,7 +124,6 @@ public class NewsController : Controller
 
         var sportClubId = news.SportClubId;
 
-        // Delete the news from the database
         _context.News.Remove(news);
         await _context.SaveChangesAsync();
         return Redirect($"/SportClubs/News/{news.SportClubId}"); 

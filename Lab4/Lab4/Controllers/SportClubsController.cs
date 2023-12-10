@@ -161,7 +161,7 @@ namespace Lab4.Controllers
             if (newsCount > 0)
             {
                 TempData["AlertMessage"] = "Cannot delete SportsClub as it has associated news.";
-                return RedirectToAction(nameof(Index)); // Redirect to Index without deleting
+                return RedirectToAction(nameof(Index));
             }
 
             var sportClub = await _context.SportClubs.FindAsync(id);
@@ -185,9 +185,8 @@ namespace Lab4.Controllers
                 return NotFound();
             }
 
-            // Assuming there's a relationship between SportClubs and News in your model
             var sportClubNews = await _context.News
-                .Where(n => n.SportClubId == id) // Replace 'SportClubId' with the actual foreign key property
+                .Where(n => n.SportClubId == id)
                 .ToListAsync();
 
             if (sportClubNews == null)

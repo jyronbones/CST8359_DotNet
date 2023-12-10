@@ -2,44 +2,34 @@
 
 @{
     ViewData["Title"] = "Index";
-}
-
-<h1>Index</h1>
-@{
     string path = Context.Request.Path.Value;
     string sportClubId = path.Length >= 2 ? path.Substring(path.Length - 2) : "";
 }
 
+<h1>Index</h1>
+
 <p>
-    <a asp-action="Create" asp-route-id="@sportClubId">Create New item for @sportClubId</a>
+    <a asp-action="Create" asp-route-id="@sportClubId">Create New item</a>
 </p>
 
 <table class="table">
     <thead>
         <tr>
-            <th>
-                Image
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FirstOrDefault().SportClub.Title)
-            </th>
+            <th>File Name</th>
+            <th>Image</th>
             <th>Actions</th>
         </tr>
     </thead>
     <tbody>
-      
         @foreach (var item in Model.Where(n => n.SportClubId == sportClubId))
         {
             <tr>
+                <td>@item.FileName</td>
                 <td>
-                    <!-- Displaying the image -->
-                    <img src="@item.Url" alt="@item.FileName" style="height: 100px; width: 100px;" />
+                    <img src="@item.Url" alt="@item.FileName" style="max-width: 400px;" />
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.SportClub.Title)
-                </td>
-                <td>
-                    <a asp-action="Delete" asp-route-id="@item.NewsId">Delete</a>
+                    <a asp-controller="News" asp-action="Delete" asp-route-id="@item.NewsId">Delete</a>
                 </td>
             </tr>
         }
