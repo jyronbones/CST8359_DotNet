@@ -1,20 +1,32 @@
 ﻿@model IEnumerable<Lab4.Models.News>
 
 @{
-    ViewData["Title"] = "News";
-}
-
-<h1>News</h1>
-
-@{
+    ViewData["Title"] = "Index";
     string path = Context.Request.Path.Value;
     string sportClubId = path.Length >= 2 ? path.Substring(path.Length - 2) : "";
+    string sportTitle = "";
+    if (sportClubId.Equals("A1", StringComparison.OrdinalIgnoreCase))
+    {
+        sportTitle = "Alpha";
+    }
+    else if (sportClubId.Equals("B1", StringComparison.OrdinalIgnoreCase))
+    {
+        sportTitle = "Beta";
+    }
+    else
+    {
+        sportTitle = "Omega";
+    }
+
+ 
 }
 
-<p>
-    <a asp-action="Create" asp-route-id="@sportClubId">Create New item for @sportClubId</a>
+<h1>Show News for @sportTitle</h1>
 
+<p>
+    <a asp-action="Create" asp-route-id="@sportClubId">Upload New</a>
 </p>
+
 <table class="table">
     <thead>
         <tr>
@@ -24,12 +36,12 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
+        @foreach (var item in Model.Where(n => n.SportClubId == sportClubId))
         {
             <tr>
                 <td>@item.FileName</td>
                 <td>
-                    <img src="@item.Url" style="max-width: 400px;" />
+                    <img src="@item.Url" alt="@item.FileName" style="max-width: 400px;" />
                 </td>
                 <td>
                     <a asp-controller="News" asp-action="Delete" asp-route-id="@item.NewsId">Delete</a>

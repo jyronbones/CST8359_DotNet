@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Lab4.Data;
 using Lab4.Models;
 using Lab4.Models.ViewModels;
+using Microsoft.AspNetCore.Http.Extensions;
 
 namespace Lab4.Controllers
 {
@@ -151,24 +152,30 @@ namespace Lab4.Controllers
             return View(sportClub);
         }
 
-        // POST: SportClubs/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            if (_context.SportClubs == null)
+            var newsCount = await _context.News.CountAsync(news => news.SportClubId == id);
+
+            if (newsCount > 0)
             {
-                return Problem("Entity set 'SportsDbContext.SportClubs'  is null.");
+                TempData["AlertMessage"] = "Cannot delete SportsClub as it has associated news.";
+                return RedirectToAction(nameof(Index));
             }
+
             var sportClub = await _context.SportClubs.FindAsync(id);
-            if (sportClub != null)
+            if (sportClub == null)
             {
-                _context.SportClubs.Remove(sportClub);
+                return NotFound();
             }
-            
+
+            _context.SportClubs.Remove(sportClub);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
+
 
         // GET: SportClubs/News/5
         public async Task<IActionResult> News(string id)
@@ -178,9 +185,8 @@ namespace Lab4.Controllers
                 return NotFound();
             }
 
-            // Assuming there's a relationship between SportClubs and News in your model
             var sportClubNews = await _context.News
-                .Where(n => n.SportClubId == id) // Replace 'SportClubId' with the actual foreign key property
+                .Where(n => n.SportClubId == id)
                 .ToListAsync();
 
             if (sportClubNews == null)
