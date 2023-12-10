@@ -1,3 +1,4 @@
+using Azure.Storage.Blobs;
 using Lab4.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,6 +15,14 @@ namespace Lab4
             var connection = builder.Configuration.GetConnectionString("DefaultConnection");
             builder.Services.AddDbContext<SportsDbContext>(options => options.UseSqlServer(connection));
             builder.Services.AddSession();
+            // Add Azure Blob Storage services
+            builder.Services.AddSingleton(serviceProvider =>
+            {
+                var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+                var connectionString = configuration.GetConnectionString("AzureBlobStorage");
+                return new BlobServiceClient(connectionString);
+            });
+
             var app = builder.Build();
 
             using (var scope = app.Services.CreateScope())

@@ -14,6 +14,7 @@ namespace Lab4.Data
         public DbSet<Fan> Fans { get; set; }
         public DbSet<SportClub> SportClubs { get; set; }
         public DbSet<Subscription> Subscriptions { get; set; }
+        public DbSet<News> News { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

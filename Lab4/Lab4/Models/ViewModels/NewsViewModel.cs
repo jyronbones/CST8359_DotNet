@@ -5,7 +5,8 @@
         public IEnumerable<Fan> Fans { get; set; }
         public IEnumerable<SportClub> SportClubs { get; set; }
         public IEnumerable<Subscription> Subscriptions { get; set; }
+        public IEnumerable<News> NewsItems { get; set; }
 
-        public string selectedId { get; set; }
+        public string currentId { get; set; }
     }
 }

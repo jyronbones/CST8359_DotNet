@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Lab4.Data;
 using Lab4.Models;
 using Lab4.Models.ViewModels;
+using Microsoft.AspNetCore.Http.Extensions;
 
 namespace Lab4.Controllers
 {
@@ -25,7 +26,7 @@ namespace Lab4.Controllers
                     SportClubs = await _context.SportClubs.ToListAsync(),
                     Fans = await _context.Fans.ToListAsync(),
                     Subscriptions = await _context.Subscriptions.ToListAsync(),
-                    selectedId = id
+                    currentId = id
                 };
                 return View(_viewModel);
             }
@@ -35,7 +36,7 @@ namespace Lab4.Controllers
                 SportClubs = await _context.SportClubs.ToListAsync(),
                 Fans = await _context.Fans.ToListAsync(),
                 Subscriptions = await _context.Subscriptions.ToListAsync(),
-                selectedId = string.Empty
+                currentId = string.Empty
             };
             return View(viewModel);
             
@@ -151,23 +152,49 @@ namespace Lab4.Controllers
             return View(sportClub);
         }
 
-        // POST: SportClubs/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            if (_context.SportClubs == null)
+            var newsCount = await _context.News.CountAsync(news => news.SportClubId == id);
+
+            if (newsCount > 0)
             {
-                return Problem("Entity set 'SportsDbContext.SportClubs'  is null.");
+                TempData["AlertMessage"] = "Cannot delete SportsClub as it has associated news.";
+                return RedirectToAction(nameof(Index));
             }
+
             var sportClub = await _context.SportClubs.FindAsync(id);
-            if (sportClub != null)
+            if (sportClub == null)
             {
-                _context.SportClubs.Remove(sportClub);
+                return NotFound();
             }
-            
+
+            _context.SportClubs.Remove(sportClub);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+
+
+        // GET: SportClubs/News/5
+        public async Task<IActionResult> News(string id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var sportClubNews = await _context.News
+                .Where(n => n.SportClubId == id)
+                .ToListAsync();
+
+            if (sportClubNews == null)
+            {
+                return NotFound();
+            }
+
+            return View(sportClubNews);
         }
 
         private bool SportClubExists(string id)

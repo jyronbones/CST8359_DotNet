@@ -1,5 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System.Collections.Generic;
 
 namespace Lab4.Models
 {
@@ -19,6 +20,11 @@ namespace Lab4.Models
         [Column(TypeName = "money")]
         public decimal Fee { get; set; }
 
-        public virtual ICollection<Subscription> Subscriptions { get; set; } = new List<Subscription>();
+        public virtual ICollection<Subscription> Subscriptions { get; set; }
+
+        public override String ToString()
+        {
+            return Title;
+        }
     }
 }

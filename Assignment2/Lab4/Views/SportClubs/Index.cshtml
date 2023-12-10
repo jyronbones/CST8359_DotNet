@@ -1,11 +1,16 @@
-﻿@model Lab4.Models.ViewModels.NewsViewModel
+@model Lab4.Models.ViewModels.NewsViewModel
 
 @{
     ViewData["Title"] = "Index";
 }
 
 <h1>Index</h1>
-
+@if (TempData.ContainsKey("AlertMessage"))
+{
+    <div class="alert alert-warning" role="alert">
+        @TempData["AlertMessage"]
+    </div>
+}
 <p>
     <a asp-action="Create">Create New</a>
 </p>
@@ -32,6 +37,7 @@
             </td>
             <td>
                 <a asp-action="Index" asp-route-id="@item.Id">Select</a> |
+                <a asp-controller="News" asp-action="Index" asp-route-id="@item.Id">News</a> |
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
@@ -40,8 +46,8 @@
 }
     </tbody>
 </table>
-@if(Model.selectedId.Any()){
-    var selectedSportClub = Model.SportClubs.FirstOrDefault(a => a.Id.Equals(Model.selectedId));
+@if(Model.currentId.Any()){
+    var selectedSportClub = Model.SportClubs.FirstOrDefault(a => a.Id.Equals(Model.currentId));
     <h2>Subscribers to @selectedSportClub.Title</h2>
     <table class="table">
         <thead>

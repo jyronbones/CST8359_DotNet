@@ -1,0 +1,54 @@
+﻿@model Lab4.Models.News
+
+@{
+    ViewData["Title"] = "Create News";
+}
+@{
+    ViewData["Title"] = "Index";
+    string path = Context.Request.Path.Value;
+    string sportClubId = path.Length >= 2 ? path.Substring(path.Length - 2) : "";
+    string sportTitle = "";
+    if (sportClubId.Equals("A1", StringComparison.OrdinalIgnoreCase))
+    {
+        sportTitle = "Alpha";
+    }
+    else if (sportClubId.Equals("B1", StringComparison.OrdinalIgnoreCase))
+    {
+        sportTitle = "Beta";
+    }
+    else
+    {
+        sportTitle = "Omega";
+    }
+
+
+}
+<h1>Upload</h1>
+
+<h4>Upload News for @sportTitle </h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" asp-route-subscriptionId="@ViewData["subscriptionId"]" enctype="multipart/form-data" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <input type="file" name="photo" class="form-control-file" />
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
