@@ -1,4 +1,4 @@
-﻿namespace Lab4.Models.ViewModels
+namespace Lab4.Models.ViewModels
 {
     public class NewsViewModel
     {

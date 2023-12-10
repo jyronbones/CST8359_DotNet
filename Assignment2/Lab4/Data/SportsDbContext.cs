@@ -1,4 +1,4 @@
-﻿using Humanizer;
+using Humanizer;
 using Lab4.Models;
 using Microsoft.EntityFrameworkCore;
 
