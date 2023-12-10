@@ -1,0 +1,24 @@
+{
+  "dependencies": {
+    "mssql1": {
+      "restored": true,
+      "restoreTime": "2023-12-10T00:31:54.2812012Z"
+    },
+    "secrets1": {
+      "restored": true,
+      "restoreTime": "2023-12-10T00:31:38.009816Z"
+    }
+  },
+  "parameters": {
+    "mssql1.subscriptionId": {
+      "Name": "mssql1.subscriptionId",
+      "Type": "subscription",
+      "Value": "bc91e59f-0b54-42be-80c6-a2c2bb216172"
+    },
+    "mssql1.resourceGroupName": {
+      "Name": "mssql1.resourceGroupName",
+      "Type": "resourceGroup",
+      "Value": "wraylab03"
+    }
+  }
+}

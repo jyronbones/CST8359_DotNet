@@ -1,0 +1,60 @@
+﻿@model List<Lab4.Models.ViewModels.FanSubscriptionViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "_Layout";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Fan.LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Fan.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Fan.BirthDate)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Fan.Id">Edit</a> |
+                    <a asp-action="EditSubscriptions" asp-route-id="@item.Fan.Id">Edit Subscriptions</a> |
+                    <a asp-action="Details" asp-route-id="@item.Fan.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Fan.Id">Delete</a> |
+                    <a asp-action="Index" asp-route-selectedFanId="@item.Fan.Id">Select</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@{
+    var selectedFanViewModel = Model.FirstOrDefault(m => m.IsSelected);
+    if (selectedFanViewModel != null)
+    {
+        <h2>Subscriptions for @selectedFanViewModel.Fan.FirstName @selectedFanViewModel.Fan.LastName</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Sport Club Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var subscription in selectedFanViewModel.Subscriptions)
+                {
+                    <tr>
+                        <td>@subscription.Title</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+}
